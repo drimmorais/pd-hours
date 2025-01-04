@@ -1,11 +1,8 @@
-import org.junit.jupiter.api.Test;
+package com.pdsolucoes;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class PdHoursControlApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
 
 }

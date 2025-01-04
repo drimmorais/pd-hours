@@ -1,4 +1,4 @@
-package main.java.com.pdsolucoes.entity;
+package com.pdsolucoes.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -10,8 +10,8 @@ my-springboot-app
 │   ├── main
 │   │   ├── java
 │   │   │   └── com
-│   │   │       └── example
-│   │   │           └── SpringBootApplication.java
+│   │   │       └── pdsolucoes
+│   │   │           └── PdHoursControlApplication.java
 │   │   └── resources
 │   │       ├── application.properties
 │   │       └── static
@@ -19,8 +19,8 @@ my-springboot-app
 │   └── test
 │       └── java
 │           └── com
-│               └── example
-│                   └── SpringBootApplicationTests.java
+│               └── pdsolucoes
+│                   └── PdHoursControlApplicationTests.java
 ├── mvnw
 ├── mvnw.cmd
 └── pom.xml

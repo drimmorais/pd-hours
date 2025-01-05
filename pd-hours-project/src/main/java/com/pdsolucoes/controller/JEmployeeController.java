@@ -27,9 +27,4 @@ public class JEmployeeController {
         return ResponseEntity.ok(savedEmployee);
     }
 
-    @GetMapping
-    public ResponseEntity<Boolean> getEmployees() {
-        //Iterable<Employee> employees = employeeRepository.findAll();
-        return ResponseEntity.ok(true);
-    }
 }

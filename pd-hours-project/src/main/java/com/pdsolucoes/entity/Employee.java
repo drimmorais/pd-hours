@@ -1,9 +1,9 @@
 package com.pdsolucoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Employee {
@@ -12,17 +12,16 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private String name;
 
-    @Min(1)
-    @Max(12)
     private int estimatedHours;
 
     @ManyToOne
-    @JoinColumn(name = "squad_id", nullable = false)
+    @JoinColumn(name = "squad_id")
+    @JsonBackReference
     private Squad squad;
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -54,5 +53,4 @@ public class Employee {
     public void setSquad(Squad squad) {
         this.squad = squad;
     }
-
 }

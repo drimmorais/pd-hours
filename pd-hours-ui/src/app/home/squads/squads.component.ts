@@ -4,9 +4,10 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { FormControl } from '@angular/forms';
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DecimalPipe, DatePipe, CommonModule } from '@angular/common';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-squads',
@@ -17,6 +18,9 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
     MatInputModule,
     DecimalPipe,
     DatePipe,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './squads.component.html',
   styleUrl: './squads.component.scss'
@@ -26,41 +30,51 @@ export class SquadsComponent implements OnInit {
   visualizeSquads: string = 'SQUAD';
   squads: any;
   hasSquadMembers = false;
-  startDate = new FormControl(new Date());
-  endDate = new FormControl(new Date());
   currentSquad!: string;
   currentId!: number;
   wasGetReport = false;
   employees: any;
   totalHours: number = 0;
   averageHours: number = 0;
+  userForm!: FormGroup;
+  hoursForm!: FormGroup;
+  squadError: boolean = false;
 
   constructor(
     private service: SquadsService,
+    private employeeService: EmployeeService,
     private modalService: NgbModal,
-    config: NgbModalConfig,) {
+    config: NgbModalConfig,
+    private fb: FormBuilder) {
     config.keyboard = false;
   }
 
   ngOnInit(): void {
+    this.userForm = this.fb.group({
+      name: ['', Validators.required],
+      hours: [null, [Validators.required, Validators.min(1)]],
+      squad: ['', Validators.required],
+    });
+
+    this.hoursForm = this.fb.group({
+      startDate: [new Date(), Validators.required],
+      endDate: [new Date(), Validators.required],
+    });
+
+    this.getSquads();
+  }
+
+  addNewSquad() {
+
+  }
+
+  getSquads() {
     this.service.getSquads()
       .subscribe((data) => {
         this.visualizeSquads = "ALL_SQUADS";
         this.squads = data;
         console.log("Data", data);
       });
-
-    this.startDate.valueChanges.subscribe(value => {
-      console.log('Start Date:', value);
-    });
-
-    this.endDate.valueChanges.subscribe(value => {
-      console.log('End Date:', value);
-    });
-  }
-
-  addNewSquad() {
-
   }
 
   checkSquad(employeesSize: number, currentSquad: string, currentId: number) {
@@ -75,22 +89,22 @@ export class SquadsComponent implements OnInit {
   }
 
   getReport() {
-    console.log("Start Date", this.startDate.value);
-    console.log("End Date", this.endDate.value);
-    if (this.startDate.value && this.endDate.value) {
-      this.service.getTotalHours(this.currentId, this.startDate.value.toISOString(), this.endDate.value.toISOString())
+    const startDate = this.hoursForm.get('startDate')?.value.toISOString();
+    const endDate = this.hoursForm.get('endDate')?.value.toISOString();
+    if (startDate && endDate) {
+      this.service.getTotalHours(this.currentId, startDate, endDate)
         .subscribe((data) => {
           this.totalHours = data
           this.wasGetReport = true;
         });
 
 
-      this.service.getHoursByEmployee(this.currentId, this.startDate.value.toISOString(), this.endDate.value.toISOString())
+      this.service.getHoursByEmployee(this.currentId, startDate, endDate)
         .subscribe((data) => {
           this.employees = data;
         });
 
-      this.service.getTotalAverage(this.currentId, this.startDate.value.toISOString(), this.endDate.value.toISOString())
+      this.service.getTotalAverage(this.currentId, startDate, endDate)
         .subscribe((data) => {
           this.averageHours = data;
         });
@@ -102,7 +116,7 @@ export class SquadsComponent implements OnInit {
     if (event.value) {
       const selectedDate = event.value;
       selectedDate.setHours(0, 0, 0, 0);
-      this.startDate.setValue(selectedDate);
+      this.hoursForm.get('startDate')?.setValue(selectedDate);
     }
   }
 
@@ -110,11 +124,24 @@ export class SquadsComponent implements OnInit {
     if (event.value) {
       const selectedDate = event.value;
       selectedDate.setHours(23, 59, 59, 0);
-      this.endDate.setValue(selectedDate);
+      this.hoursForm.get('endDate')?.setValue(selectedDate);
     }
   }
 
   open(content: any) {
     this.modalService.open(content);
   }
+
+  createUser(): void {
+    if (this.userForm.valid) {
+      const formData = this.userForm.value;
+
+      this.employeeService.createEmployee(formData)
+        .subscribe((data) => {
+          this.getSquads();
+          this.modalService.dismissAll();
+        });
+    }
+  }
+
 }

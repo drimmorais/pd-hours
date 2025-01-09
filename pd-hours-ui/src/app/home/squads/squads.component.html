@@ -30,7 +30,9 @@
                             <td>{{item.name}}</td>
                             <td>
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-primary" (click)="checkSquad(item.employees.length, item.name, item.id)">Visitar squad</button>
+                                    <button class="btn btn-primary"
+                                            (click)="checkSquad(item.employees.length, item.name, item.id)">Visitar
+                                        squad</button>
                                 </div>
                             </td>
                         </tr>
@@ -45,81 +47,86 @@
             </div>
         </div>
         }@if(visualizeSquads === 'SQUAD') {
-            <div class="row">
-                <div class="col-1">
-                    <a href="" class="back"><</a>
-                </div>
-                <div class="col-11">
-                    <h3>{{currentSquad}}</h3>
-                </div>
+        <div class="row">
+            <div class="col-1">
+                <a href="" class="back"><</a>
             </div>
+            <div class="col-11">
+                <h3>{{currentSquad}}</h3>
+            </div>
+        </div>
         <br>
         <div class="card mb-5 card-custom" style="min-width: 1250px;">
             <div class="card-body mt-5 mb-5">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-center">
                         <div class="d-flex align-items-center">
-                            <mat-form-field appearance="outline" class="me-2">
-                                <mat-label>Início</mat-label>
-                                <input matInput [matDatepicker]="picker" formControlName="startDate" [disabled]="!hasSquadMembers" (dateChange)="onStartDateChange($event)">
-                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
+                            <form [formGroup]="hoursForm">
+                                <mat-form-field appearance="outline" class="me-2">
+                                    <mat-label>Início</mat-label>
+                                    <input matInput [matDatepicker]="picker" formControlName="startDate"
+                                           [disabled]="!hasSquadMembers" (dateChange)="onStartDateChange($event)">
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="me-2">
-                                <mat-label>Fim</mat-label>
-                                <input matInput [matDatepicker]="picker2" formControlName="endDate" [disabled]="!hasSquadMembers" (dateChange)="onEndDateChange($event)">
-                                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-                                <mat-datepicker #picker2></mat-datepicker>
-                            </mat-form-field>
-                            <button class="btn btn-primary btn-custom" color="primary" 
-                            [disabled]="!hasSquadMembers" (click)="getReport()">Filtrar por data</button>
+                                <mat-form-field appearance="outline" class="me-2">
+                                    <mat-label>Fim</mat-label>
+                                    <input matInput [matDatepicker]="picker2" formControlName="endDate"
+                                           [disabled]="!hasSquadMembers" (dateChange)="onEndDateChange($event)">
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                                <button class="btn btn-primary btn-custom" color="primary"
+                                        [disabled]="!hasSquadMembers" (click)="getReport()">Filtrar por data</button>
+                            </form>
                         </div>
                     </div>
                 </div>
                 @if(!hasSquadMembers){
-                    <div class="d-flex justify-content-center">
-                        <img class="pb-3" src="assets/emotes/emote.svg" alt="">
-                    </div>
-                    <p style="color: #ACB5BD" class="text-center">Nenhum usuário cadastrado nesta squad. Crie um usuário para começar.</p>
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-primary" (click)="open(content)">Adicionar usuário</button>
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <img class="pb-3" src="assets/emotes/emote.svg" alt="">
+                </div>
+                <p style="color: #ACB5BD" class="text-center">Nenhum usuário cadastrado nesta squad. Crie um usuário
+                    para começar.</p>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary" (click)="open(content)">Adicionar usuário</button>
+                </div>
                 }@else if (!wasGetReport) {
-                    <div class="d-flex justify-content-center">
-                        <img class="pb-3" src="assets/emotes/emote.svg" alt="">
-                    </div>
-                    <p style="color: #ACB5BD" class="text-center">Nenhum intervalo de data selecionado. Selecione um intervalo para começar.</p>
+                <div class="d-flex justify-content-center">
+                    <img class="pb-3" src="assets/emotes/emote.svg" alt="">
+                </div>
+                <p style="color: #ACB5BD" class="text-center">Nenhum intervalo de data selecionado. Selecione um
+                    intervalo para começar.</p>
                 }@else {
-                    <h5 class="text-center">Horas por membro</h5>
-                    <table class="table table-responsive custom-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 20%;" class="text-center" scope="col">Membro</th>
-                                <th style="width: 40%;" scope="col">Descrição</th>
-                                <th style="width: 10%;" scope="col">Horas</th>
-                                <th style="width: 30%;" scope="col">Criado em</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-light">
-                            @for (item of employees; track $index) {
+                <h5 class="text-center">Horas por membro</h5>
+                <table class="table table-responsive custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;" class="text-center" scope="col">Membro</th>
+                            <th style="width: 40%;" scope="col">Descrição</th>
+                            <th style="width: 10%;" scope="col">Horas</th>
+                            <th style="width: 30%;" scope="col">Criado em</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-light">
+                        @for (item of employees; track $index) {
                             <tr>
                                 <td class="text-center">{{item.employee.name}}</td>
                                 <td>{{item.description}}</td>
                                 <td>{{item.spentHours}}</td>
                                 <td>{{item.createdAt | date:'dd/MM/yyyy'}}</td>
                             </tr>
-                            }
-    
-                        </tbody>
-                    </table>
-                    <br>
-                    <div class="text-center">
-                        <h4>Horas totais da squad</h4>
-                        <h1 style="color: #4263EB;">{{totalHours}} Horas</h1>
-                        <h4>Média de horas por dia</h4>
-                        <h1 style="color: #4263EB;">{{averageHours | number:'1.1-1'}} Horas/Dia</h1>
-                    </div>
+                        }
+                    </tbody>
+                </table>
+                <br>
+                <div class="text-center">
+                    <h4>Horas totais da squad</h4>
+                    <h1 style="color: #4263EB;">{{totalHours}} Horas</h1>
+                    <h4>Média de horas por dia</h4>
+                    <h1 style="color: #4263EB;">{{averageHours | number:'1.1-1'}} Horas/Dia</h1>
+                </div>
                 }
             </div>
         </div>
@@ -128,14 +135,53 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Hi there!</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<p>Hello, World!</p>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="c('Save click')">Save</button>
-	</div>
+    <div class="modal-header text-center">
+        <h4 class="modal-title" id="modal-basic-title">Criar Usuário</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="userForm">
+            <!-- Nome do usuário -->
+            <div class="form-group">
+                <label for="name">Nome do Usuário</label>
+                <input
+                       id="name"
+                       type="text"
+                       formControlName="name"
+                       placeholder="Digite o nome da squad" />
+                <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid">
+                    <small class="error">O nome é obrigatório</small>
+                </div>
+            </div>
+
+            <!-- Horas estimadas -->
+            <div class="form-group">
+                <label for="hours">Horas Estimadas de Trabalho</label>
+                <input
+                       id="hours"
+                       type="number"
+                       formControlName="hours"
+                       placeholder="Digite a quantidade de horas" />
+                <div *ngIf="userForm.get('hours')?.touched && userForm.get('hours')?.invalid">
+                    <small class="error">As horas devem ser positivas</small>
+                </div>
+            </div>
+
+            <!-- Squad -->
+            <div class="form-group">
+                <label for="squad">Squad</label>
+                <input
+                       id="squad"
+                       type="text"
+                       formControlName="squad"
+                       placeholder="Digite o Id da squad"
+                       [ngClass]="{ error: squadError }" />
+                <div *ngIf="squadError">
+                    <small class="error">Não existe squad com este ID</small>
+                </div>
+            </div>
+
+            <!-- Botão de submissão -->
+            <button (click)="createUser()" [disabled]="userForm.invalid">Criar usuário</button>
+        </form>
+    </div>
 </ng-template>

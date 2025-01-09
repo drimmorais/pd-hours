@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SquadsService } from '../../services/squads.service';
 
 @Component({
   selector: 'app-squads',
@@ -6,9 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: './squads.component.html',
   styleUrl: './squads.component.scss'
 })
-export class SquadsComponent {
-addNewSquad() {
-throw new Error('Method not implemented.');
-}
+export class SquadsComponent implements OnInit {
+
+  constructor(private service: SquadsService) { }
+
+  ngOnInit(): void {
+    this.service.getSquads()
+      .subscribe((data) => {console.log(data)});
+  }
+
+  addNewSquad() {
+    throw new Error('Method not implemented.');
+  }
 
 }

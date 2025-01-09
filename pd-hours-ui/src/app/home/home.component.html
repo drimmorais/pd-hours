@@ -1,0 +1,78 @@
+<div class="container teste">
+  <app-navbar></app-navbar>
+  <div class="mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>PD Hours</h1>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" (click)="open(hour)">Lançar horas</button>
+        </div>
+      </div>
+    </div>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="Squads">
+        <app-squads></app-squads>
+      </mat-tab>
+      <mat-tab label="Usuarios">
+        <app-users></app-users>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div>
+
+</div>
+
+
+<ng-template #hour let-c="close" let-d="dismiss">
+  <div class="modal-header text-center">
+    <h4 class="modal-title" id="modal-basic-title">Criar Usuário</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="newHoursForm">
+
+      <div class="form-group">
+        <label for="name">ID do Usuário</label>
+        <input
+               id="id"
+               type="text"
+               formControlName="id"
+               placeholder="ID do usuário" />
+        <div *ngIf="newHoursForm.get('id')?.touched && newHoursForm.get('id')?.invalid">
+          <small class="error">O ID do usuário é obrigatório</small>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="hours">Horas Gastas</label>
+        <input
+               id="hours"
+               type="number"
+               formControlName="hours"
+               placeholder="Digite a quantidade de horas" />
+        <div *ngIf="newHoursForm.get('hours')?.touched && newHoursForm.get('hours')?.invalid">
+          <small class="error">As horas devem ser positivas</small>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="squad">Descrição</label>
+        <input
+               id="description"
+               type="text"
+               formControlName="description"
+               placeholder="Exemplo de texto de descrição da tarefa executada."
+               [ngClass]="{ error: squadError }" />
+        <div *ngIf="newHoursForm.get('description')?.touched && newHoursForm.get('description')?.invalid">
+          <small class="error">A descrição é obrigatória</small>
+        </div>
+      </div>
+
+
+      <button (click)="addNewPDHours()" [disabled]="newHoursForm.invalid">Criar lançamento</button>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,52 @@
+# Eclipse
+.project
+.classpath
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# NetBeans
+.nb-gradle/
+nbproject/
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+
+# Arquivos temporários de sistema operacional
+Thumbs.db
+.DS_Store
+
+# Arquivos de dependências gerados
+*.war
+*.jar
+
+# Arquivos de configuração locais
+application.properties
+application.yml
+*.env
+
+# Arquivos de banco de dados locais (se houver)
+*.h2.db
+*.db
+
+# Arquivos de compilação
+*.class
+
+# Arquivos de backup
+*.bak
+
+# Arquivos de configuração do IDE
+*.idea/
+*.vscode/
+*.swp

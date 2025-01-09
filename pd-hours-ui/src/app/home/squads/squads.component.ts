@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-squads',
@@ -15,7 +16,7 @@ import { DecimalPipe, DatePipe } from '@angular/common';
     MatNativeDateModule,
     MatInputModule,
     DecimalPipe,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './squads.component.html',
   styleUrl: './squads.component.scss'
@@ -34,7 +35,12 @@ export class SquadsComponent implements OnInit {
   totalHours: number = 0;
   averageHours: number = 0;
 
-  constructor(private service: SquadsService) { }
+  constructor(
+    private service: SquadsService,
+    private modalService: NgbModal,
+    config: NgbModalConfig,) {
+    config.keyboard = false;
+  }
 
   ngOnInit(): void {
     this.service.getSquads()
@@ -54,7 +60,7 @@ export class SquadsComponent implements OnInit {
   }
 
   addNewSquad() {
-    
+
   }
 
   checkSquad(employeesSize: number, currentSquad: string, currentId: number) {
@@ -107,5 +113,8 @@ export class SquadsComponent implements OnInit {
       this.endDate.setValue(selectedDate);
     }
   }
-  
+
+  open(content: any) {
+    this.modalService.open(content);
+  }
 }

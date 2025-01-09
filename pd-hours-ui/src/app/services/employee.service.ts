@@ -19,4 +19,11 @@ export class EmployeeService {
     }
     return this.http.post('http://localhost:8080/employee', body);
   }
+
+  createSquad(squad: any):Observable<any> {
+    const body = {
+      name: squad.name
+    }
+    return this.http.post('http://localhost:8080/squad', body);
+  }
 }

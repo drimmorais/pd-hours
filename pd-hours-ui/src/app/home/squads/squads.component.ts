@@ -27,7 +27,7 @@ import { EmployeeService } from '../../services/employee.service';
 })
 export class SquadsComponent implements OnInit {
 
-  visualizeSquads: string = 'SQUAD';
+  visualizeSquads: string = 'NONE';
   squads: any;
   hasSquadMembers = false;
   currentSquad!: string;
@@ -38,6 +38,7 @@ export class SquadsComponent implements OnInit {
   averageHours: number = 0;
   userForm!: FormGroup;
   hoursForm!: FormGroup;
+  squadForm!: FormGroup;
   squadError: boolean = false;
 
   constructor(
@@ -61,19 +62,22 @@ export class SquadsComponent implements OnInit {
       endDate: [new Date(), Validators.required],
     });
 
+    this.squadForm = this.fb.group({
+      name: ['', Validators.required],
+    });
+
     this.getSquads();
   }
 
-  addNewSquad() {
-
-  }
 
   getSquads() {
     this.service.getSquads()
       .subscribe((data) => {
-        this.visualizeSquads = "ALL_SQUADS";
-        this.squads = data;
-        console.log("Data", data);
+        if(data.length){
+          this.visualizeSquads = "ALL_SQUADS";
+          this.squads = data;
+          console.log("Data", data);
+        }
       });
   }
 
@@ -82,10 +86,6 @@ export class SquadsComponent implements OnInit {
     this.currentId = currentId;
     employeesSize > 0 ? this.hasSquadMembers = true : this.hasSquadMembers = false;
     this.visualizeSquads = "SQUAD";
-    // this.service.getSquadMembers(id)
-    //   .subscribe((data) => {
-    //     this.squadMembers = data;
-    //   });
   }
 
   getReport() {
@@ -132,11 +132,27 @@ export class SquadsComponent implements OnInit {
     this.modalService.open(content);
   }
 
+  openSquad(content: any) {
+    const modalRef = this.modalService.open(content);
+  }
+
   createUser(): void {
     if (this.userForm.valid) {
       const formData = this.userForm.value;
 
       this.employeeService.createEmployee(formData)
+        .subscribe((data) => {
+          this.getSquads();
+          this.modalService.dismissAll();
+        });
+    }
+  }
+
+  createSquad(): void {
+    if (this.squadForm.valid) {
+      const formData = this.squadForm.value;
+
+      this.employeeService.createSquad(formData)
         .subscribe((data) => {
           this.getSquads();
           this.modalService.dismissAll();

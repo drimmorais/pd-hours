@@ -28,5 +28,16 @@ export class SquadsService {
   getTotalAverage(id: number, startDate: string, endDate: string):Observable<any> {
     return this.http.get('http://localhost:8080/report/average-hours?' + 'squadId=' + id + '&startDate=' + startDate + '&endDate=' + endDate);
   }
+
+  createReport(report: any):Observable<any> {
+    const body = {
+        description: report.description,
+        employee: {
+          id: report.id
+        },
+      spentHours: report.hours
+    }
+    return this.http.post('http://localhost:8080/report', body);
+  }
 }
 

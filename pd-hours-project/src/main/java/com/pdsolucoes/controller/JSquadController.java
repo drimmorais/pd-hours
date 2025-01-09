@@ -21,4 +21,10 @@ public class JSquadController {
         Squad savedSquad = squadRepository.save(squad);
         return ResponseEntity.ok(savedSquad);
     }
+
+    @GetMapping
+    public ResponseEntity<Iterable<Squad>> getSquads() {
+        Iterable<Squad> squads = squadRepository.findAll();
+        return ResponseEntity.ok(squads);
+    }
 }

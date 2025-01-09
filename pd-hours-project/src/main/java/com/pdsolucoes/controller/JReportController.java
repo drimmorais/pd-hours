@@ -11,8 +11,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class JReportController {
     @PostMapping
     public ResponseEntity<Report> createReport(@RequestBody Report report) {
         if (report.getDescription() == null || report.getDescription().isEmpty() ||
-            report.getEmployee() == null || report.getSpentHours() <= 0) {
+                report.getEmployee() == null || report.getSpentHours() <= 0) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -46,11 +48,10 @@ public class JReportController {
     @GetMapping("/hours-by-member")
     public ResponseEntity<List<Report>> getHoursByMember(
             @RequestParam Long squadId,
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startDateTime = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(endDate, formatter);
+            @RequestParam Instant startDate,
+            @RequestParam Instant endDate) {
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate, ZoneId.systemDefault());
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate, ZoneId.systemDefault());
         List<Report> reports = reportRepository.findBySquadIdAndCreatedAtBetween(squadId, startDateTime, endDateTime);
         return ResponseEntity.ok(reports);
     }
@@ -58,26 +59,26 @@ public class JReportController {
     @GetMapping("/total-hours")
     public ResponseEntity<Integer> getTotalHours(
             @RequestParam Long squadId,
-            // @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime startDate,
-            // @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime endDate) {
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startDateTime = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(endDate, formatter);
-        Integer totalHours = reportRepository.sumSpentHoursBySquadIdAndCreatedAtBetween(squadId, startDateTime, endDateTime);
+            @RequestParam Instant startDate,
+            @RequestParam Instant endDate) {
+
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate, ZoneId.systemDefault());
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate, ZoneId.systemDefault());
+
+        Integer totalHours = reportRepository.sumSpentHoursBySquadIdAndCreatedAtBetween(squadId, startDateTime,
+                endDateTime);
         return ResponseEntity.ok(totalHours);
     }
 
     @GetMapping("/average-hours")
     public ResponseEntity<Double> getAverageHours(
             @RequestParam Long squadId,
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startDateTime = LocalDateTime.parse(startDate, formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(endDate, formatter);
-        Double averageHours = reportRepository.averageSpentHoursBySquadIdAndCreatedAtBetween(squadId, startDateTime, endDateTime);
+            @RequestParam Instant startDate,
+            @RequestParam Instant endDate) {
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startDate, ZoneId.systemDefault());
+        LocalDateTime endDateTime = LocalDateTime.ofInstant(endDate, ZoneId.systemDefault());
+        Double averageHours = reportRepository.averageSpentHoursBySquadIdAndCreatedAtBetween(squadId, startDateTime,
+                endDateTime);
         return ResponseEntity.ok(averageHours);
     }
 }

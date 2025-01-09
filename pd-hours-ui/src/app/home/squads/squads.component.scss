@@ -1,3 +1,37 @@
-p{
-    font-size: 14px;
+p {
+  font-size: 14px;
+}
+
+.table thead th {
+  background-color: #4263eb; /* Cor de fundo */
+  color: white; /* Cor do texto */
+}
+
+.custom-table {
+  border-radius: 10px;
+  overflow: hidden; /* Para evitar que o conteúdo extrapole as bordas arredondadas */
+}
+
+.btn-primary {
+  background-color: #4263eb;
+}
+
+.btn {
+  width: 152px;
+}
+
+.btn-custom {
+  height: 75%;
+  margin-bottom: 20px;
+}
+
+.card-custom {
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+.back {
+  font-size:x-large ;
+  text-decoration: none;
+  color: black;
 }
